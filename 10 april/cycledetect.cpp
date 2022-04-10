@@ -1,5 +1,6 @@
-#include<bits/stdc++.h>
+#include <iostream>
 using namespace std;
+
 class node {
 public:
 	int data;
@@ -10,7 +11,6 @@ public:
 		next = NULL;
 	}
 };
-//////////////////////// CLASS NODE ///////////////////////
 
 void InsertAtBegin(node* &head, node* &tail, int data) {
 	if (!head) { // Iska mtlb hai pehli node aa rhi hai toh head & tail both will update
@@ -74,38 +74,82 @@ void InsertAtMid(node* &head, node* &tail, int pos, int data) {
 }
 
 
-void Bubblesort(node* &head){
-	int l=length(head);
-	node* c,*p,*l;
-	for(int i=0;i<l-1;i++){
 
+void bubblesort(node* &head){
+	int len = lengthLL(head);
+	node* c,*p,*n;
+	for (int i=0;i<len-1;i++){
 		c=head;
 		p=NULL;
 		while(c and c->next){
-			if(c->data>c->next->data){
+			if(c->data > c->next->data){
+				///swapping hogi
 				if(p==NULL){
-					n=c->next;
-					c->next=n->next;
-					n->next=c;
-					head=p=n;
-				}
-				else{
-					n=c->next;
-					c->next=n->next;
-					n->next=c;
-					p->next=n;
-					p=n;
-				}
+			     //head change hoga
+			     n=c->next;
+			     c->next=n->next;
+			     n->next=c;
+			     head=p=n;
+			 }
+			 else{
+				//head change nahi hogaaa.....
+				n=c->next;
+				c->next=n->next;
+				n->next=c;
+				p->next=n;
+				p=n;
 			}
-			else{
+
+			}
+			else {
+				//swapping nahi hogi
 				p=c;
 				c=c->next;
 			}
+
 		}
 	}
 }
-int main(){
+void breakCycle(node* fast, node* head){
+	node* slow =head;
+	node* prev = head;
+	while(prev->next != fast){
+		prev=prev->next;
+	}
+	while (fast!=slow){
+		prev= fast;
+		fast=fast->next;
+		slow=slow->next;
+	}
+	prev->next=NULL;
+}
 
+bool isCyclic(node*head){
+	node* slow, *fast;
+	slow = fast = head;
+
+	while(fast !=NULL and fast->next !=NULL ){
+		fast = fast->next->next;
+		slow=slow->next;
+		if(fast==slow){
+			breakCycle(fast,head);
+			return true ;
+		}
+	}
+	return false;
+}
+
+void createCycle(node* head){
+	node* temp=head;
+	while(temp->next){
+		temp=temp->next;
+	}
+	temp->next = head->next->next;
+} 
+
+
+
+int main() {
 
 	node* head, *tail;
 	head = tail = NULL;
@@ -118,4 +162,14 @@ int main(){
 	InsertAtEnd(head, tail, 2);
 
 	printLL(head);
+	// printLL(head);
+	bubblesort(head);
+	createCycle(head);
+	// printLL(head);
+	if(isCyclic(head)){
+		cout<<"cycle hai"<<endl;
+	}
+	else 
+		cout<<"cycle nahi h"<<endl;
+	return 0;
 }
